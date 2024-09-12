@@ -23,6 +23,7 @@ const FileUpload: React.FC = () => {
   const [fileName, setFileName] = useState<string>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
@@ -49,6 +50,7 @@ const FileUpload: React.FC = () => {
           }))
         );
         setFileData(parsedData);
+        setSubmitted(false);
         setOpenModal(true);
       }
     };
@@ -69,6 +71,7 @@ const FileUpload: React.FC = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      setSubmitted(true);
       setSnackbarMessage("File sent successfully.");
       setSnackbarOpen(true);
       setOpenModal(false);
@@ -80,23 +83,12 @@ const FileUpload: React.FC = () => {
   };
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent="center"
-      alignItems="center"
-      style={{ textAlign: "center" }}
-    >
-      <Grid item xs={12}>
-        <Typography variant="h5">Upload File</Typography>
+    <Grid container spacing={3} justifyContent="center" alignItems="center">
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <Typography variant="h5">Upload Your File</Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Button
-          variant="contained"
-          component="label"
-          color="primary"
-          style={{ marginBottom: "20px" }}
-        >
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <Button variant="contained" component="label" color="primary">
           Choose File
           <input
             type="file"
@@ -107,8 +99,8 @@ const FileUpload: React.FC = () => {
         </Button>
       </Grid>
       {fileName && (
-        <Grid item xs={12}>
-          <Typography variant="subtitle1">Selected: {fileName}</Typography>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
+          <Typography variant="subtitle1">Selected File: {fileName}</Typography>
         </Grid>
       )}
 
@@ -118,7 +110,7 @@ const FileUpload: React.FC = () => {
         maxWidth="lg"
         fullWidth
       >
-        <DialogTitle>Verify File Data</DialogTitle>
+        <DialogTitle>Verify File</DialogTitle>
         <DialogContent dividers style={{ height: "400px" }}>
           <div
             className="ag-theme-alpine"
@@ -153,9 +145,9 @@ const FileUpload: React.FC = () => {
             }
             color="primary"
             variant="contained"
-            disabled={loading}
+            disabled={loading || submitted}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Submitting..." : submitted ? "Submitted" : "Submit"}
           </Button>
         </DialogActions>
       </Dialog>
